@@ -5,7 +5,7 @@ import statsmodels.api as sm
 import statsmodels.stats as sms #OLS model
 
 # Creating the dataframe for the houseing data
-Housedb = pd.read_csv('/kaggle/input/house-prices-advanced-regression-techniques/housetrain.csv')
+Housedb = pd.read_csv('train.csv')
 #looking at the first few rows
 Housedb.head()
 
@@ -26,15 +26,13 @@ mp.scatter(np.log(LotFrontage), np.log(LotArea))
 
 mp.show()
 
-np.corrcoef(LotArea,LotFrontage)
-
 #OLS regression itself
 Y = np.log(SalePrice)
 X = np.log(Housedb[['LotArea','LotFrontage']])
 X = sm.add_constant(X)
 model = sm.OLS(Y,X,missing='drop')
 results = model.fit()
-results.summary(results)
+print(results.summary(results))
 
 #testing for heteroskedasticity
 sms.diagnostic.het_breuschpagan(results.resid,X.dropna())
