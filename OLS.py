@@ -7,7 +7,7 @@ import statsmodels.stats as sms #OLS model
 # Creating the dataframe for the houseing data
 Housedb = pd.read_csv('train.csv')
 #looking at the first few rows
-Housedb.head()
+print(Housedb.head())
 
 #pulling out a couple of variables to use in a simple model
 LotFrontage=Housedb[['LotFrontage']]
@@ -16,23 +16,24 @@ SalePrice = Housedb[['SalePrice']]
 #taking a quick look at the graphs of the data 
 mp.scatter(np.log(LotArea),np.log(SalePrice))
 
-mp.show()
+#mp.show()
 
 mp.scatter(np.log(LotFrontage), np.log(SalePrice))
 
-mp.show()
+#mp.show()
 
 mp.scatter(np.log(LotFrontage), np.log(LotArea))
 
-mp.show()
+#mp.show()
 
 #OLS regression itself
 Y = np.log(SalePrice)
 X = np.log(Housedb[['LotArea','LotFrontage']])
 X = sm.add_constant(X)
 model = sm.OLS(Y,X,missing='drop')
-results = model.fit()
+results = model.fit(cov_type='HC1')
 print(results.summary(results))
 
 #testing for heteroskedasticity
-sms.diagnostic.het_breuschpagan(results.resid,X.dropna())
+bp=sms.diagnostic.het_breuschpagan(results.resid,X.dropna())
+print(bp)
